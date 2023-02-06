@@ -6,14 +6,14 @@ const tokenService = require('./TokenService');
 const UserDto = require('../dtos/UserDto');
 
 class UserService {
-  async registration(email, password) {
+  async registration(email, password, name) {
     const user = await UserModel.findOne({ email });
     if (user) {
       throw new Error(`User ${email} already exists`);
     }
     const hashedPassword = await bcrypt.hash(password, 7);
     // const activationLInk = uuid.v4();
-    const newUser = await UserModel.create({ email, password: hashedPassword });
+    const newUser = await UserModel.create({ email, password: hashedPassword, name });
     // await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLInk}`);
     
     const userDto = new UserDto(newUser);
