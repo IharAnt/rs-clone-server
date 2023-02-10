@@ -4,12 +4,13 @@ const uuid = require('uuid');
 const mailService = require('./MailService');
 const tokenService = require('./TokenService');
 const UserDto = require('../dtos/UserDto');
+const ApiError = require('../exceptions/ApiError');
 
 class UserService {
   async registration(email, password, name) {
     const user = await UserModel.findOne({ email });
     if (user) {
-      throw new Error(`User ${email} already exists`);
+      throw ApiError.BadRequest(`User ${email} already exists`);
     }
     const hashedPassword = await bcrypt.hash(password, 7);
     // const activationLInk = uuid.v4();
@@ -29,7 +30,7 @@ class UserService {
   async activate(link) {
     const user = await UserModel.findOne({ activationLink: link});
     if (!user) {
-      throw new Error('Activation link is invalid');
+      throw ApiError.BadRequest('Activation link is invalid');
     }
     user.isActivated = true;
     user.save();

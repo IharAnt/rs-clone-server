@@ -9,7 +9,7 @@ class UserController {
 
       return res.json(userData);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 
@@ -17,7 +17,7 @@ class UserController {
     try {
       
     } catch (error) {
-      
+      next(error);
     }
   }
 
@@ -25,7 +25,7 @@ class UserController {
     try {
       
     } catch (error) {
-      
+      next(error);
     }
   }
 
@@ -35,7 +35,7 @@ class UserController {
       await userService.activate(activationLInk);
       return res.redirect(process.env.CLIENT_URL);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 
@@ -43,7 +43,7 @@ class UserController {
     try {
       
     } catch (error) {
-      
+      next(error);
     }
   }
 
