@@ -29,6 +29,16 @@ class UserController {
     }
   }
 
+  async activate(req, res, next) {
+    try {
+      const activationLInk = req.params.link;
+      await userService.activate(activationLInk);
+      return res.redirect(process.env.CLIENT_URL);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async refresh(req, res, next) {
     try {
       
