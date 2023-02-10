@@ -63,9 +63,10 @@ class UserController {
 
   async getUsers(req, res, next) {
     try {
-      res.json(['123']);
+      const users = await userService.getUsers();
+      return res.json(users);
     } catch (error) {
-      
+      next(error);
     }
   }
 
