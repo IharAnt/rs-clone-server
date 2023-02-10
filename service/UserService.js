@@ -42,6 +42,11 @@ class UserService {
     return await this.generateTokenData(user);
   }
 
+  async logout(refreshToken) {
+    const token = await tokenService.removeToken(refreshToken);
+    return token;
+  }
+
   async generateTokenData(user) {
     const userDto = new UserDto(user);
     const tokens = tokenService.generateToken({...userDto});
