@@ -17,14 +17,7 @@ class UserService {
     const newUser = await UserModel.create({ email, password: hashedPassword, name });
     // await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLInk}`);
     
-    const userDto = new UserDto(newUser);
-    const tokens = tokenService.generateToken({...userDto});
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
-    
-    return {
-      ...tokens,
-      user: userDto,
-    };
+    return await this.generateTokenData(newUser);
   }
 
   async activate(link) {
@@ -34,6 +27,30 @@ class UserService {
     }
     user.isActivated = true;
     user.save();
+  }
+
+  async login(email, password) {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      throw ApiError.BadRequest('User not found');
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw ApiError.BadRequest('Invalid password');
+    }
+
+    return await this.generateTokenData(user);
+  }
+
+  async generateTokenData(user) {
+    const userDto = new UserDto(user);
+    const tokens = tokenService.generateToken({...userDto});
+    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    
+    return {
+      ...tokens,
+      user: userDto,
+    };
   }
 }
 
