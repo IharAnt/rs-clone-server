@@ -63,7 +63,8 @@ class UserService {
 
   async getUsers() {
     const users = await UserModel.find();
-    return users;
+    const result = users.map((user) => new UserDto(user));
+    return result;
   }
 
   async generateTokenData(user) {

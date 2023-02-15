@@ -17,5 +17,8 @@ router.get('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 
 router.post('/task', authMiddleware, taskController.createTask);
+router.put('/task/:taskId', authMiddleware, taskController.updateTask);
+router.get('/task/executor/:userId', authMiddleware, taskController.getExecutorTasks);
+router.get('/task/inspector/:userId', authMiddleware, taskController.getInspectorTasks);
 
 module.exports = router;
