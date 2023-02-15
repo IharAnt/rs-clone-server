@@ -18,6 +18,21 @@ class TaskService {
     return result;
   }
 
+  async updateTask(taskId, task) {
+    let user = await TaskModel.create(this.mapTaskToTaskModel(task));
+    const newUser = await (TaskModel.findById(taskId)
+      .populate('executor')
+      .populate('inspector')
+      .populate({
+        path: "messages",
+        populate: {
+           path: "author"
+        }
+     }));
+    const result = new TaskDto(newUser);
+    return result;
+  }
+
   mapTaskToTaskModel(task) {
     return {
       executor: task.executor.id,
