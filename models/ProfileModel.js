@@ -12,8 +12,9 @@ const ProfileSchema = Schema({
     type: {type: String},
     value: {type: Number}
   }],
-  achievements: [AchievementSchema],
+  achievements: [{type: Schema.Types.ObjectId, ref: 'Achievement'}],
   level: {type: Number, default: 0},
+  doneTasks: {type: Number, default: 0}
 });
 
 const Profile = model('Profile', ProfileSchema);

@@ -63,6 +63,10 @@ class UserService {
     }
 
     const user = await UserModel.findById(userData.id);
+    const profile = await Profile.findOne({ user: user._id});
+    if (!profile) {
+      await Profile.create({ user: user._id});
+    }
     return await this.generateTokenData(user);
   }
 

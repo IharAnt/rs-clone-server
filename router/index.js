@@ -16,6 +16,8 @@ router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
+router.get('/profile/:userId', authMiddleware, userController.getProfile);
+router.put('/profile/:userId', authMiddleware, userController.updateProfile);
 
 router.post('/task', authMiddleware, taskController.createTask);
 router.put('/task/:taskId', authMiddleware, taskController.updateTask);

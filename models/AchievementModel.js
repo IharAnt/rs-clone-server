@@ -2,8 +2,7 @@ const {Schema, model} = require('mongoose');
 
 const AchievementSchema = new Schema({ 
   name: {type: String, required: true},
-  imgBlack: {type: String},
-  imgColor: {type: String},
+  img: {type: String},
   type: {type: String, required: true},
   description: {type: String},
   maxPoints: {type: Number},

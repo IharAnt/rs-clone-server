@@ -17,4 +17,6 @@ const TaskSchema = new Schema({
   points: {type: Number},
 });
 
-module.exports = model('Task', TaskSchema);
+const Task = model('Task', TaskSchema);
+
+module.exports = {Task, TaskSchema}

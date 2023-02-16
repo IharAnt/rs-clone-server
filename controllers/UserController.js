@@ -1,6 +1,7 @@
 const userService = require('../service/UserService');
 const {validationResult} = require('express-validator');
 const ApiError = require('../exceptions/ApiError');
+const profileService = require('../service/ProfileService');
 
 class UserController {
   async registration(req, res, next) {
@@ -65,6 +66,27 @@ class UserController {
     try {
       const users = await userService.getUsers();
       return res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getProfile(req, res, next) {
+    try {
+      const {userId} = req.params;
+      const profile = await profileService.getProfile(userId);
+      return res.json(profile);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateProfile(req, res, next) {
+    try {
+      const {userId} = req.params;
+      const updateProfile = req.body;
+      const profile = await profileService.updateProfile(userId, updateProfile);
+      return res.json(profile);
     } catch (error) {
       next(error);
     }
