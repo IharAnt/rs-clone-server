@@ -1,11 +1,11 @@
 const ApiError = require("../exceptions/ApiError");
-const TaskModel = require("../models/TaskModel");
+const {Task} = require("../models/TaskModel");
 const TaskDto = require("../dtos/TaskDto");
 
 class TaskService {
   async createTask(task) {
-    let newTask = await TaskModel.create(this.mapTaskToTaskModel(task));
-    newTask = await TaskModel.findById(newTask._id)
+    let newTask = await Task.create(this.mapTaskToTaskModel(task));
+    newTask = await Task.findById(newTask._id)
       .populate("executor")
       .populate("inspector")
       .populate({
@@ -19,9 +19,13 @@ class TaskService {
   }
 
   async updateTask(taskId, task) {
-    let updatedTask = await TaskModel.findOneAndUpdate({ _id: taskId }, this.mapTaskToTaskModel(task), {
-      new: true,
-    })
+    let updatedTask = await Task.findOneAndUpdate(
+      { _id: taskId },
+      this.mapTaskToTaskModel(task),
+      {
+        new: true,
+      }
+    )
       .populate("executor")
       .populate("inspector")
       .populate({
@@ -35,7 +39,7 @@ class TaskService {
   }
 
   async getExecutorTasks(userId) {
-    const tasks = await TaskModel.find({ executor: userId })
+    const tasks = await Task.find({ executor: userId })
       .populate("executor")
       .populate("inspector")
       .populate({
@@ -49,7 +53,7 @@ class TaskService {
   }
 
   async getInspectorTasks(userId) {
-    const tasks = await TaskModel.find({ inspector: userId })
+    const tasks = await Task.find({ inspector: userId })
       .populate("executor")
       .populate("inspector")
       .populate({

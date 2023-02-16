@@ -5,6 +5,7 @@ const mailService = require('./MailService');
 const tokenService = require('./TokenService');
 const UserDto = require('../dtos/UserDto');
 const ApiError = require('../exceptions/ApiError');
+const { Profile } = require('../models/ProfileModel');
 
 class UserService {
   async registration(email, password, name) {
@@ -15,6 +16,7 @@ class UserService {
     const hashedPassword = await bcrypt.hash(password, 7);
     // const activationLInk = uuid.v4();
     const newUser = await UserModel.create({ email, password: hashedPassword, name });
+    await Profile.create({ user: newUser._id});
     // await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLInk}`);
     
     return await this.generateTokenData(newUser);
@@ -38,7 +40,10 @@ class UserService {
     if (!isMatch) {
       throw ApiError.BadRequest('Invalid password');
     }
-
+    const profile = await Profile.findOne({ user: user._id});
+    if (!profile) {
+      await Profile.create({ user: user._id});
+    }
     return await this.generateTokenData(user);
   }
 
@@ -58,6 +63,10 @@ class UserService {
     }
 
     const user = await UserModel.findById(userData.id);
+    const profile = await Profile.findOne({ user: user._id});
+    if (!profile) {
+      await Profile.create({ user: user._id});
+    }
     return await this.generateTokenData(user);
   }
 
