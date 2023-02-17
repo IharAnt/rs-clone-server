@@ -1,6 +1,8 @@
 const ApiError = require("../exceptions/ApiError");
 const {Task} = require("../models/TaskModel");
 const TaskDto = require("../dtos/TaskDto");
+const taskStatuses = require("../models/consts/TaskStatuses");
+const { Profile } = require("../models/ProfileModel");
 
 class TaskService {
   async createTask(task) {
@@ -19,13 +21,9 @@ class TaskService {
   }
 
   async updateTask(taskId, task) {
-    let updatedTask = await Task.findOneAndUpdate(
-      { _id: taskId },
-      this.mapTaskToTaskModel(task),
-      {
-        new: true,
-      }
-    )
+    // await this.calculateProfile(taskId, task);
+    let updatedTask = await Task.findOneAndUpdate({ _id: taskId }, 
+      this.mapTaskToTaskModel(task), { new: true })
       .populate("executor")
       .populate("inspector")
       .populate({
@@ -64,6 +62,40 @@ class TaskService {
       });
     const result = tasks.map((task) => new TaskDto(task));
     return result;
+  }
+
+  async calculateProfile(taskId, task) {
+    if(task.status === taskStatuses.Approved) {
+      return;
+    }
+    const oldTask = await Task.findById(taskId);
+    if(!oldTask || oldTask.status === taskStatuses.Approved) {
+      return;
+    }
+    
+    const profile = await Profile.findOne({ user: task.executor.id })
+      .populate("achievements");
+
+    let experience = profile.experiences.findLast((exp) => exp.type === "inprogress");
+    // let experience = await profile.experiences.find({ $elemMatch : { type : task.type } });
+    if(experience) {
+      experience.value += task.points;
+    } else {
+      experience = {
+        type: task.type,
+        value: task.points,
+      };
+      profile.experiences.push(experience);
+    }
+
+    let achievement = profile.achievements.find((achievement) => achievement.type === experience.type);
+
+    profile.totalExperience += task.points;
+    profile.moticoins += task.points;
+    profile.doneTasks += 1;
+
+    await profile.save();
+
   }
 
   mapTaskToTaskModel(task) {
