@@ -72,7 +72,7 @@ class TaskService {
     if(!oldTask || oldTask.status === taskStatuses.Approved) {
       return;
     }
-    
+    const a = 0;
     const profile = await Profile.findOne({ user: task.executor.id })
       .populate("achievements");
 
