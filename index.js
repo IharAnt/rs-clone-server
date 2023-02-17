@@ -5,17 +5,29 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const router = require('./router/index');
 const errorMiddleware = require('./middlewares/ErrorMiddleware')
+const cookieSession = require("cookie-session");
 
 mongoose.set('strictQuery', false);
 
 const PORT = process.env.PORT || 5000;
 const app = express();
-
+// app.use(
+//   cookieSession({
+//     name: "__session",
+//     keys: ["key1"],
+//       maxAge: 20 * 24 * 60 * 60 * 1000,
+//       secure: true,
+//       httpOnly: true,
+//       sameSite: 'none'
+//   })
+// );
 app.use(express.json({limit: '100mb'}));
 app.use(cookieParser());
+app.set('trust proxy', 1)
+
 app.use(cors({
   credentials: true,
-  origin: process.env.CLIENT_URL,
+  origin: [process.env.CLIENT_URL, 'http://localhost:3000'],
 }));
 app.use('/api', router);
 app.use(errorMiddleware);
