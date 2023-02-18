@@ -22,8 +22,8 @@ class RatingController {
 
   async getRating(req, res, next) {
     try {
-      const {_page, _limit, _sort, _order} = req.query
-      const ratings = await ratingService.getRating(_page, _limit, _sort, _order);
+      const {_page, _limit, _sort, _order, _search} = req.query
+      const ratings = await ratingService.getRating(_page, _limit, _sort, _order, _search);
       return res.json(ratings);
     } catch (error) {
       next(error);
