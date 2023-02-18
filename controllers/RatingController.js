@@ -19,6 +19,16 @@ class RatingController {
       next(error);
     }
   }
+
+  async getRating(req, res, next) {
+    try {
+      const {_page, _limit, _sort, _order} = req.query
+      const ratings = await ratingService.getRating(_page, _limit, _sort, _order);
+      return res.json(ratings);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new RatingController();

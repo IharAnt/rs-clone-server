@@ -25,6 +25,7 @@ router.get('/task/executor/:userId', authMiddleware, taskController.getExecutorT
 router.get('/task/inspector/:userId', authMiddleware, taskController.getInspectorTasks);
 
 router.get('/rating/getAchivements', authMiddleware, ratingController.getAchievements);
+router.get('/rating', authMiddleware, ratingController.getRating);
 router.post('/rating/addAchivement', authMiddleware, ratingController.addAchievement);
 
 module.exports = router;
