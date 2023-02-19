@@ -1,4 +1,5 @@
 const AchievementDto = require("./AchievementDto");
+const AchievementProfileDto = require("./AchievementProfileDto");
 
 module.exports = class ProfiletDto {
   constructor(model, {nextLevelExperience, tasksStatus}) {
@@ -11,7 +12,7 @@ module.exports = class ProfiletDto {
     this.moticoins = model.moticoins;
     this.totalExperience = model.totalExperience;
     this.experiences = model.experiences;
-    this.achievements = model.achievements.map((achievement) => new AchievementDto(achievement));
+    this.achievements = model.achievements.map((achievement) => new AchievementProfileDto(achievement));
     this.tasksStatus = tasksStatus;
     this.nextLevelExperience = nextLevelExperience;
     this.level = model.level;
