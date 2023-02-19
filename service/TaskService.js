@@ -98,9 +98,11 @@ class TaskService {
     profile.moticoins += task.points;
     profile.doneTasks += 1;
     
-    const lvl = await Level.findOne({ experience: {$gt : profile.totalExperience} });
-    if(profile.level<lvl.level) {
+    const lvl = await Level.findOne({ experience: {$gte : profile.totalExperience} });
+    if(profile.totalExperience>=lvl.experience) {
       profile.level = lvl.level;
+    } else {
+      profile.level = lvl.level - 1;
     }
 
     const achievement = [...profile.achievements].find((ach) => ach.type === experience.type);
