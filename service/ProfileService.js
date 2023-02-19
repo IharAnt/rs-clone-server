@@ -38,7 +38,10 @@ class ProfileService {
   }
 
   async getNextLevelExp(level) {
-    const lvl = await Level.findOne({ level: {$gt : level} });
+    let lvl = await Level.findOne({ level: {$gt : level} });
+    if (!lvl) {
+      lvl = await Level.findOne({ level: {$gte : level} });
+    }
     return lvl.experience;
   }
   
