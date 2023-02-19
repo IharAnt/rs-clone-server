@@ -4,6 +4,7 @@ const taskController = require('../controllers/TaskController');
 const ratingController = require('../controllers/RatingController');
 const {body} = require('express-validator');
 const authMiddleware = require('../middlewares/AuthMiddleware');
+const shopController = require('../controllers/ShopController');
 
 const router = new Router();
 
@@ -27,5 +28,9 @@ router.get('/task/inspector/:userId', authMiddleware, taskController.getInspecto
 router.get('/rating/getAchivements', authMiddleware, ratingController.getAchievements);
 router.get('/rating', ratingController.getRating);
 router.post('/rating/addAchivement', authMiddleware, ratingController.addAchievement);
+
+router.post('/shop/addProduct', authMiddleware, shopController.addProduct);
+router.get('/shop/products', authMiddleware, shopController.getProducts);
+
 
 module.exports = router;

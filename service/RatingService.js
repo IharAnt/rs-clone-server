@@ -119,6 +119,11 @@ class RatingService {
   }
 
   sortByExperienceOrLevel(result, sort, order) {
+    if (!sort) {
+      result.sort((a, b) => a.place - b.place);
+      return;
+    }
+    
     if (!sort || sort === ratingSortType.Place) {
       if (order === orderType.Asc) {
         result.sort((a, b) => a.place - b.place);
