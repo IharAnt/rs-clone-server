@@ -101,9 +101,6 @@ class RatingService {
       { $limit: limit },
     ]);
 
-    // const res = await agregate.exec();
-    // console.log(res);
-
     const usersPlaces = await this.getUsersPlaces();
     const result = {
       count,
@@ -117,7 +114,27 @@ class RatingService {
           )
       ),
     };
+    this.sortByExperienceOrLevel(result.items, sort, order);
     return result;
+  }
+
+  sortByExperienceOrLevel(result, sort, order) {
+    if (!sort || sort === ratingSortType.Place) {
+      if (order === orderType.Asc) {
+        result.sort((a, b) => a.place - b.place);
+      } else {
+        result.sort((a, b) => b.place - a.place);
+      }
+      return;
+    }
+    if (sort === ratingSortType.TotalExperience) {
+      if (order === orderType.Asc) {
+        result.sort((a, b) => b.place - a.place);
+      } else {
+        result.sort((a, b) => a.place - b.place);
+      }
+      return;
+    }
   }
 
   getSortObject(sort, order) {
@@ -175,9 +192,29 @@ class RatingService {
   }
 
   async getUsersPlaces() {
-    let users = await Profile.find()
-      .populate("user")
-      .sort([[ratingSortType.TotalExperience, orderType.Desc]]);
+    const sortObj = {
+      $sort: {
+        [`${ratingSortType.TotalExperience}`]: -1,
+      },
+    };
+    let users = await Profile.aggregate([
+      {
+        $lookup: {
+          from: UserModel.collection.name,
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          user: 1,
+          totalExperience: 1,
+        },
+      },
+      { $unwind: "$user" },
+      sortObj,
+    ]);
     const usersPlaces = [...users].map((user, index) => ({
       user: user.user,
       place: index + 1,
