@@ -25,12 +25,15 @@ router.put('/task/:taskId', authMiddleware, taskController.updateTask);
 router.get('/task/executor/:userId', authMiddleware, taskController.getExecutorTasks);
 router.get('/task/inspector/:userId', authMiddleware, taskController.getInspectorTasks);
 
-router.get('/rating/getAchivements', authMiddleware, ratingController.getAchievements);
+router.get('/rating/getAchivements', ratingController.getAchievements);
 router.get('/rating', ratingController.getRating);
 router.post('/rating/addAchivement', authMiddleware, ratingController.addAchievement);
 
 router.post('/shop/addProduct', authMiddleware, shopController.addProduct);
-router.get('/shop/products', authMiddleware, shopController.getProducts);
+router.get('/shop/products', shopController.getProducts);
+router.post('/shop/addOrders/:userId', authMiddleware, shopController.addOrders);
+router.get('/shop/orders/:userId', authMiddleware, shopController.getOrders);
+
 
 
 module.exports = router;

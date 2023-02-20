@@ -19,6 +19,27 @@ class ShopController {
       next(error);
     }
   }
+
+  async addOrders(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const cartProducts = req.body;
+      const orders = await ShopService.addOrders(userId, cartProducts);
+      return res.json(orders);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getOrders(req, res, next) {
+    try {
+      const userId = req.params.userId;
+      const orders = await ShopService.getOrders(userId);
+      return res.json(orders);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ShopController();

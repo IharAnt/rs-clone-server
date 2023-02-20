@@ -97,9 +97,13 @@ class RatingService {
       },
       { $unwind: "$user" },
       sortObj,
+      // { $count: "Total" },
       { $skip: limit * page },
       { $limit: limit },
     ]);
+
+    // const res = await agregate.itcount();
+    // console.log(res);
 
     const usersPlaces = await this.getUsersPlaces();
     const result = {
