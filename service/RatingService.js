@@ -97,9 +97,13 @@ class RatingService {
       },
       { $unwind: "$user" },
       sortObj,
+      // { $count: "Total" },
       { $skip: limit * page },
       { $limit: limit },
     ]);
+
+    // const res = await agregate.itcount();
+    // console.log(res);
 
     const usersPlaces = await this.getUsersPlaces();
     const result = {
@@ -119,6 +123,11 @@ class RatingService {
   }
 
   sortByExperienceOrLevel(result, sort, order) {
+    if (!sort) {
+      result.sort((a, b) => a.place - b.place);
+      return;
+    }
+    
     if (!sort || sort === ratingSortType.Place) {
       if (order === orderType.Asc) {
         result.sort((a, b) => a.place - b.place);
