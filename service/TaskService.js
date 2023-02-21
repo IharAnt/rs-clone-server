@@ -1,21 +1,20 @@
-const ApiError = require("../exceptions/ApiError");
-const {Task} = require("../models/TaskModel");
-const TaskDto = require("../dtos/TaskDto");
-const taskStatuses = require("../models/consts/TaskStatuses");
-const { Profile } = require("../models/ProfileModel");
-const { Achievement } = require("../models/AchievementModel");
-const { Level } = require("../models/LevelModel");
+const { Task } = require('../models/TaskModel');
+const TaskDto = require('../dtos/TaskDto');
+const taskStatuses = require('../models/consts/TaskStatuses');
+const { Profile } = require('../models/ProfileModel');
+const { Achievement } = require('../models/AchievementModel');
+const { Level } = require('../models/LevelModel');
 
 class TaskService {
   async createTask(task) {
     let newTask = await Task.create(this.mapTaskToTaskModel(task));
     newTask = await Task.findById(newTask._id)
-      .populate("executor")
-      .populate("inspector")
+      .populate('executor')
+      .populate('inspector')
       .populate({
-        path: "messages",
+        path: 'messages',
         populate: {
-          path: "author",
+          path: 'author',
         },
       });
     const result = new TaskDto(newTask);
@@ -24,14 +23,13 @@ class TaskService {
 
   async updateTask(taskId, task) {
     await this.calculateProfile(taskId, task);
-    let updatedTask = await Task.findOneAndUpdate({ _id: taskId }, 
-      this.mapTaskToTaskModel(task), { new: true })
-      .populate("executor")
-      .populate("inspector")
+    let updatedTask = await Task.findOneAndUpdate({ _id: taskId }, this.mapTaskToTaskModel(task), { new: true })
+      .populate('executor')
+      .populate('inspector')
       .populate({
-        path: "messages",
+        path: 'messages',
         populate: {
-          path: "author",
+          path: 'author',
         },
       });
     const result = new TaskDto(updatedTask);
@@ -40,12 +38,12 @@ class TaskService {
 
   async getExecutorTasks(userId) {
     const tasks = await Task.find({ executor: userId })
-      .populate("executor")
-      .populate("inspector")
+      .populate('executor')
+      .populate('inspector')
       .populate({
-        path: "messages",
+        path: 'messages',
         populate: {
-          path: "author",
+          path: 'author',
         },
       });
     const result = tasks.map((task) => new TaskDto(task));
@@ -54,12 +52,12 @@ class TaskService {
 
   async getInspectorTasks(userId) {
     const tasks = await Task.find({ inspector: userId })
-      .populate("executor")
-      .populate("inspector")
+      .populate('executor')
+      .populate('inspector')
       .populate({
-        path: "messages",
+        path: 'messages',
         populate: {
-          path: "author",
+          path: 'author',
         },
       });
     const result = tasks.map((task) => new TaskDto(task));
@@ -67,24 +65,22 @@ class TaskService {
   }
 
   async calculateProfile(taskId, task) {
-    if(task.status !== taskStatuses.Approved) {
+    if (task.status !== taskStatuses.Approved) {
       return;
     }
     const oldTask = await Task.findById(taskId);
-    if(!oldTask || oldTask.status === taskStatuses.Approved) {
+    if (!oldTask || oldTask.status === taskStatuses.Approved) {
       return;
     }
-    const a = 0;
-    const profile = await Profile.findOne({ user: task.executor.id })
-      .populate("achievements");
+    const profile = await Profile.findOne({ user: task.executor.id }).populate('achievements');
 
     // let experience = await Profile.findOne({ user: task.executor.id, "experiences.type": task.type }, {"experiences.$": true });
     // let sdfsdf = experience.experiences[0].value;
-     // let experience2 = await Profile.findOne({ user: task.executor.id, "experiences.type": task.type }, {experiences: 1 }).exec();
+    // let experience2 = await Profile.findOne({ user: task.executor.id, "experiences.type": task.type }, {experiences: 1 }).exec();
     // console.log(experience);
     // let experience = await profile.experiences.find({ $elemMatch : { type : task.type } });
     let experience = [...profile.experiences].find((exp) => exp.type === task.type);
-    if(experience) {
+    if (experience) {
       experience.value += task.points;
     } else {
       experience = {
@@ -97,18 +93,18 @@ class TaskService {
     profile.totalExperience += task.points;
     profile.moticoins += task.points;
     profile.doneTasks += 1;
-    
-    const lvl = await Level.findOne({ experience: {$gte : profile.totalExperience} });
-    if(profile.totalExperience>=lvl.experience) {
+
+    const lvl = await Level.findOne({ experience: { $gte: profile.totalExperience } });
+    if (profile.totalExperience >= lvl.experience) {
       profile.level = lvl.level;
     } else {
       profile.level = lvl.level - 1;
     }
 
     const achievement = [...profile.achievements].find((ach) => ach.type === experience.type);
-    if(!achievement) {
+    if (!achievement) {
       const etalonAchievement = await Achievement.findOne({ type: task.type });
-      if(etalonAchievement && etalonAchievement.maxPoints <= experience.value) {
+      if (etalonAchievement && etalonAchievement.maxPoints <= experience.value) {
         profile.achievements.push(etalonAchievement);
       }
     }

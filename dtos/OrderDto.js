@@ -1,4 +1,4 @@
-const ProductDto = require("./ProductDto");
+const ProductDto = require('./ProductDto');
 
 module.exports = class OrderDto {
   constructor(model) {
@@ -7,4 +7,4 @@ module.exports = class OrderDto {
     this.product = new ProductDto(model.product);
     this.count = model.count;
   }
-}
+};

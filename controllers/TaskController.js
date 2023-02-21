@@ -1,9 +1,9 @@
-const taskService = require("../service/TaskService");
+const taskService = require('../service/TaskService');
 
 class TaskController {
   async createTask(req, res, next) {
     try {
-      const task = req.body
+      const task = req.body;
       const newTask = await taskService.createTask(task);
       return res.json(newTask);
     } catch (error) {
@@ -13,8 +13,8 @@ class TaskController {
 
   async updateTask(req, res, next) {
     try {
-      const {taskId} = req.params;
-      const task = req.body
+      const { taskId } = req.params;
+      const task = req.body;
       const newTask = await taskService.updateTask(taskId, task);
       return res.json(newTask);
     } catch (error) {
@@ -24,8 +24,8 @@ class TaskController {
 
   async getExecutorTasks(req, res, next) {
     try {
-      const {userId} = req.params;
-       const tasks = await taskService.getExecutorTasks(userId);
+      const { userId } = req.params;
+      const tasks = await taskService.getExecutorTasks(userId);
       return res.json(tasks);
     } catch (error) {
       next(error);
@@ -34,8 +34,8 @@ class TaskController {
 
   async getInspectorTasks(req, res, next) {
     try {
-      const {userId} = req.params;
-       const tasks = await taskService.getInspectorTasks(userId);
+      const { userId } = req.params;
+      const tasks = await taskService.getInspectorTasks(userId);
       return res.json(tasks);
     } catch (error) {
       next(error);

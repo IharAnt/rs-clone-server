@@ -1,12 +1,12 @@
-const AchievementDto = require("../dtos/AchievementDto");
-const RatingDto = require("../dtos/RatingDto");
-const ApiError = require("../exceptions/ApiError");
-const { Achievement } = require("../models/AchievementModel");
-const orderType = require("../models/consts/OrderType");
-const ratingSortType = require("../models/consts/RatingSortType");
-const { Profile } = require("../models/ProfileModel");
-const UserModel = require("../models/UserModel");
-const profileService = require("./ProfileService");
+const AchievementDto = require('../dtos/AchievementDto');
+const RatingDto = require('../dtos/RatingDto');
+const ApiError = require('../exceptions/ApiError');
+const { Achievement } = require('../models/AchievementModel');
+const orderType = require('../models/consts/OrderType');
+const ratingSortType = require('../models/consts/RatingSortType');
+const { Profile } = require('../models/ProfileModel');
+const UserModel = require('../models/UserModel');
+const profileService = require('./ProfileService');
 
 class RatingService {
   async addAchievement(achievement) {
@@ -17,16 +17,14 @@ class RatingService {
 
   async getAchievements() {
     const achievements = await Achievement.find();
-    const result = achievements.map(
-      (newAchievement) => new AchievementDto(newAchievement)
-    );
+    const result = achievements.map((newAchievement) => new AchievementDto(newAchievement));
     return result;
   }
 
   async addAchivementToProfile(userId, achievementId) {
     const profile = await Profile.findOne({ user: userId });
     if (!profile) {
-      throw ApiError.BadRequest("Profile not foun");
+      throw ApiError.BadRequest('Profile not foun');
     }
     // profile.achievements = []
     profile.achievements.push(achievementId);
@@ -38,19 +36,21 @@ class RatingService {
     limit = Math.abs(limit) || 10;
     page = (Math.abs(page) || 1) - 1;
     search = search || '';
-    const count = (await Profile.aggregate([
-      {
-        $lookup: {
-          from: UserModel.collection.name,
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
+    const count = (
+      await Profile.aggregate([
+        {
+          $lookup: {
+            from: UserModel.collection.name,
+            localField: 'user',
+            foreignField: '_id',
+            as: 'user',
+          },
         },
-      },
-      { 
-        $match: { "user.name": { "$regex": `${search}`, "$options": "i" } }
-      },
-    ])).length;
+        {
+          $match: { 'user.name': { $regex: `${search}`, $options: 'i' } },
+        },
+      ])
+    ).length;
 
     let sortObj = this.getSortObject(sort, order);
 
@@ -58,20 +58,20 @@ class RatingService {
       {
         $lookup: {
           from: UserModel.collection.name,
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user',
         },
       },
-      { 
-        $match: { "user.name": { "$regex": `${search}`, "$options": "i" } }
+      {
+        $match: { 'user.name': { $regex: `${search}`, $options: 'i' } },
       },
       {
         $lookup: {
           from: Achievement.collection.name,
-          localField: "achievements",
-          foreignField: "_id",
-          as: "achievements",
+          localField: 'achievements',
+          foreignField: '_id',
+          as: 'achievements',
         },
       },
       {
@@ -88,14 +88,14 @@ class RatingService {
           doneTasks: 1,
           numberOfAchievements: {
             $cond: {
-              if: { $isArray: "$achievements" },
-              then: { $size: "$achievements" },
+              if: { $isArray: '$achievements' },
+              then: { $size: '$achievements' },
               else: 0,
             },
           },
         },
       },
-      { $unwind: "$user" },
+      { $unwind: '$user' },
       sortObj,
       // { $count: "Total" },
       { $skip: limit * page },
@@ -110,13 +110,7 @@ class RatingService {
       count,
       page: page + 1,
       limit,
-      items: (await agregate).map(
-        (profile) =>
-          new RatingDto(
-            profile,
-            usersPlaces
-          )
-      ),
+      items: (await agregate).map((profile) => new RatingDto(profile, usersPlaces)),
     };
     this.sortByExperienceOrLevel(result.items, sort, order);
     return result;
@@ -127,7 +121,7 @@ class RatingService {
       result.sort((a, b) => a.place - b.place);
       return;
     }
-    
+
     if (!sort || sort === ratingSortType.Place) {
       if (order === orderType.Asc) {
         result.sort((a, b) => a.place - b.place);
@@ -152,17 +146,11 @@ class RatingService {
         [`${ratingSortType.TotalExperience}`]: order === orderType.Asc ? 1 : -1,
       },
     };
-    if (
-      sort &&
-      order &&
-      sort !== ratingSortType.Empty &&
-      order !== orderType.Empty
-    ) {
+    if (sort && order && sort !== ratingSortType.Empty && order !== orderType.Empty) {
       if (sort === ratingSortType.Place) {
         return {
           $sort: {
-            [`${ratingSortType.TotalExperience}`]:
-              order === orderType.Asc ? -1 : 1,
+            [`${ratingSortType.TotalExperience}`]: order === orderType.Asc ? -1 : 1,
           },
         };
       }
@@ -210,9 +198,9 @@ class RatingService {
       {
         $lookup: {
           from: UserModel.collection.name,
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user',
         },
       },
       {
@@ -221,7 +209,7 @@ class RatingService {
           totalExperience: 1,
         },
       },
-      { $unwind: "$user" },
+      { $unwind: '$user' },
       sortObj,
     ]);
     const usersPlaces = [...users].map((user, index) => ({

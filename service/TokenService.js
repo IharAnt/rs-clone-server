@@ -33,11 +33,11 @@ class TokenService {
 
   async saveToken(userId, refreshToken) {
     const token = await TokenModel.findOne({ user: userId });
-    if(token) {
+    if (token) {
       token.refreshToken = refreshToken;
       return token.save();
     }
-    const newToken = await TokenModel.create({user: userId, refreshToken});
+    const newToken = await TokenModel.create({ user: userId, refreshToken });
     return newToken;
   }
 

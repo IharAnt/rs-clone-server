@@ -1,6 +1,6 @@
-const ImgFileDto = require("./ImgFileDto");
-const MessageDto = require("./MessageDto");
-const UserDto = require("./UserDto");
+const ImgFileDto = require('./ImgFileDto');
+const MessageDto = require('./MessageDto');
+const UserDto = require('./UserDto');
 
 module.exports = class TaskDto {
   constructor(model) {

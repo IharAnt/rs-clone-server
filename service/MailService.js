@@ -24,7 +24,7 @@ class Mailervice {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    await this.transporter.sendMail(mailOptions);
   }
 }
 

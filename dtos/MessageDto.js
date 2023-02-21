@@ -1,4 +1,4 @@
-const UserDto = require("./UserDto");
+const UserDto = require('./UserDto');
 
 module.exports = class MessageDto {
   constructor(model) {

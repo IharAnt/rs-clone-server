@@ -5,6 +5,6 @@ const taskStatuses = {
   Resolved: 'resolved',
   Rejected: 'rejected',
   Approved: 'approved',
-}
+};
 
 module.exports = taskStatuses;

@@ -1,9 +1,9 @@
-const ShopService = require("../service/ShopService");
+const ShopService = require('../service/ShopService');
 
 class ShopController {
   async addProduct(req, res, next) {
     try {
-      const product = req.body
+      const product = req.body;
       const newProduct = await ShopService.addProduct(product);
       return res.json(newProduct);
     } catch (error) {

@@ -1,8 +1,7 @@
-const AchievementDto = require("./AchievementDto");
-const AchievementProfileDto = require("./AchievementProfileDto");
+const AchievementProfileDto = require('./AchievementProfileDto');
 
 module.exports = class ProfiletDto {
-  constructor(model, {nextLevelExperience, tasksStatus}) {
+  constructor(model, { nextLevelExperience, tasksStatus }) {
     this.id = model.user._id;
     this.name = model.user.name;
     this.email = model.user.email;

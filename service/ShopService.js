@@ -1,9 +1,8 @@
-const OrderDto = require("../dtos/OrderDto");
-const ProductDto = require("../dtos/ProductDto");
-const ApiError = require("../exceptions/ApiError");
-const { Order } = require("../models/OrderModel");
-const { Product } = require("../models/ProductModel");
-const { Profile } = require("../models/ProfileModel");
+const OrderDto = require('../dtos/OrderDto');
+const ProductDto = require('../dtos/ProductDto');
+const { Order } = require('../models/OrderModel');
+const { Product } = require('../models/ProductModel');
+const { Profile } = require('../models/ProfileModel');
 
 class ShopService {
   async addProduct(product) {
@@ -24,27 +23,22 @@ class ShopService {
       let newOrder = await Order.findOneAndUpdate(
         { user: userId, product: cartProduct.product.id },
         { $inc: { count: cartProduct.count } },
-        { upsert: true, new: true }
+        { upsert: true, new: true },
       )
-        .populate("user")
-        .populate("product");
+        .populate('user')
+        .populate('product');
       result.push(new OrderDto(newOrder));
     }
     const totalPrice = cartProducts.reduce(
       (agr, cartProduct) => agr + cartProduct.count * cartProduct.product.price,
-      0
+      0,
     );
-    await Profile.updateOne(
-      { user: userId },
-      { $inc: { moticoins: -totalPrice } }
-    );
+    await Profile.updateOne({ user: userId }, { $inc: { moticoins: -totalPrice } });
     return result;
   }
 
   async getOrders(userId) {
-    const products = await Order.find({ user: userId })
-      .populate("user")
-      .populate("product");
+    const products = await Order.find({ user: userId }).populate('user').populate('product');
     const result = products.map((product) => new OrderDto(product));
     return result;
   }
