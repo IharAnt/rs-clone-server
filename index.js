@@ -4,8 +4,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const router = require('./router/index');
-const errorMiddleware = require('./middlewares/ErrorMiddleware');
+
 const { default: axios } = require('axios');
+const ErrorMiddleware = require('./middlewares/ErrorMiddleware');
 
 mongoose.set('strictQuery', false);
 
@@ -23,7 +24,7 @@ app.use(
   }),
 );
 app.use('/api', router);
-app.use(errorMiddleware);
+app.use(ErrorMiddleware);
 
 const start = async () => {
   try {
