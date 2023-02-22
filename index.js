@@ -46,7 +46,7 @@ setInterval(async () => {
     console.log('timeout: ' + (await result.data));
   } catch (error) {
     /* empty */
-    console.log(error.message);
+    console.log(error.response?.data.message);
   }
 }, 100000);
 
