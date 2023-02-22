@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const router = require('./router/index');
 const errorMiddleware = require('./middlewares/ErrorMiddleware');
+const { default: axios } = require('axios');
 
 mongoose.set('strictQuery', false);
 
@@ -40,13 +41,8 @@ const start = async () => {
 
 // keep onrender active
 setInterval(async () => {
-  const result = await fetch('https://tododone4.onrender.com/api/shop/ping', {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-    },
-  });
-  console.log('timeout: ' + (await result.json()));
+  const result = await axios.get('https://tododone4.onrender.com/api/shop/ping');
+  console.log('timeout: ' + (await result.data));
 }, 5000);
 
 start();
