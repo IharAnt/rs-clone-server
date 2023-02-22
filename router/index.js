@@ -35,5 +35,6 @@ router.post('/shop/addProduct', authMiddleware, shopController.addProduct);
 router.get('/shop/products', shopController.getProducts);
 router.post('/shop/addOrders/:userId', authMiddleware, shopController.addOrders);
 router.get('/shop/orders/:userId', authMiddleware, shopController.getOrders);
+router.get('/shop/ping', shopController.getPing);
 
 module.exports = router;

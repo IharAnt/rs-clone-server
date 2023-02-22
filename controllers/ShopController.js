@@ -20,6 +20,14 @@ class ShopController {
     }
   }
 
+  async getPing(req, res, next) {
+    try {
+      return res.json('pong');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addOrders(req, res, next) {
     try {
       const userId = req.params.userId;
