@@ -22,8 +22,8 @@ class ShopController {
 
   async getPing(req, res, next) {
     try {
-      console.log('pong');
-      return res.json('pong');
+      console.log(1);
+      return res.json(1);
     } catch (error) {
       next(error);
     }
