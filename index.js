@@ -43,8 +43,8 @@ const start = async () => {
 // keep onrender active
 setInterval(async () => {
   try {
-    const result = await axios.get('https://tododone4.onrender.com/api/shop/ping');
-    console.log('timeout: ' + (await result.data));
+    const result = await axios.get('https://tododone5.onrender.com/api/shop/ping');
+    console.log('tododone5: ' + (await result.data));
   } catch (error) {
     /* empty */
     console.log(error.response?.data.message);
