@@ -38,4 +38,15 @@ const start = async () => {
   }
 };
 
+// keep onrender active
+setInterval(async () => {
+  const result = await fetch('https://tododone4.onrender.com/api/shop/ping', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+  console.log('timeout: ' + (await result.json()));
+}, 5000);
+
 start();
