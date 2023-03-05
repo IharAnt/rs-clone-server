@@ -46,7 +46,9 @@ class TaskService {
           path: 'author',
         },
       });
-    const result = tasks.map((task) => new TaskDto(task));
+    const result = tasks
+      .filter((task) => task.executor !== null && task.inspector !== null)
+      .map((task) => new TaskDto(task));
     return result;
   }
 
@@ -60,7 +62,9 @@ class TaskService {
           path: 'author',
         },
       });
-    const result = tasks.map((task) => new TaskDto(task));
+    const result = tasks
+      .filter((task) => task.executor !== null && task.inspector !== null)
+      .map((task) => new TaskDto(task));
     return result;
   }
 
